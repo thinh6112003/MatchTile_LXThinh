@@ -30,32 +30,32 @@ public class CollectBox : MonoBehaviour
         {
             Tile newTile =  Instantiate(tilePrefab,myTransform);
             newTile.transform.localPosition = new Vector3(3,10,0);
-            //if (isNotAutoInsert)
-            //    newTile.setTile(idTileInsert);
-            //else 
-            //    newTile.setTile();
+            if (isNotAutoInsert)
+                newTile.setTile(idTileInsert);
+            else
+                newTile.setTile();
             StartCoroutine(AddTile(newTile));
             if (isHighSpeed)
             {
                 demhighspeed++;
             }
-            if (demhighspeed == 15)
+            if (demhighspeed == 6)
             {
                 isHighSpeed = false;
                 demhighspeed = 0;
             }
-            if (dem < 3)
-            {
-                newTile.setTile(0);
-            }
-            else
-            if (dem < 6)
-            {
-                newTile.setTile(1);
-            }
-            else {
-                newTile.setTile();
-            }
+            //if (dem < 3)
+            //{
+            //    newTile.setTile(0);
+            //}
+            //else
+            //if (dem < 6)
+            //{
+            //    newTile.setTile(1);
+            //}
+            //else {
+            //    newTile.setTile();
+            //}
             Invoke(nameof(Test), isHighSpeed? 0.25f :  1f);
         }
         dem++;
@@ -64,15 +64,14 @@ public class CollectBox : MonoBehaviour
     {
         //if (listCurrentTile.Count == maxCollectTile) yield return null;
         yield return new WaitForSeconds(0.2f);
-        int insertIndex= listCurrentTile.Count;
-        MoveToInsertTile(newTile, ref insertIndex);
-        if (CheckThreeMatch(insertIndex, newTile))
+        MoveToInsertTile(newTile);
+        yield return new WaitForSeconds(0.7f);
+        if (CheckThreeMatch(newTile))
         {
             Dictionary<Tile, Vector3> dicTileToTarget = new Dictionary<Tile, Vector3>();
             List<Tile> listMatchTile = new List<Tile>();
             Debug.Log("is three match");
-            MoveUpTilesModel(insertIndex, dicTileToTarget, listMatchTile);
-            yield return new WaitForSeconds(0.7f);
+            MoveUpTilesModel(newTile, dicTileToTarget, listMatchTile);
             HideMatchTile(listMatchTile);
             yield return new WaitForSeconds(0.2f);
             Debug.Log("MoveUpTilesView,RemoveMatchTile");
@@ -81,37 +80,38 @@ public class CollectBox : MonoBehaviour
         }
         yield return null;
     }
-    private int MoveToInsertTile(Tile tile, ref int insertIndex)
+    private void MoveToInsertTile(Tile tile)
     {
+        tile.setIndexInBox(listCurrentTile.Count);
         for (int i = listCurrentTile.Count - 1; i >= 0; i--)
         {
             if (listCurrentTile[i].getSpriteID() == tile.getSpriteID())
             {
-                insertIndex = i + 1;
+                tile.setIndexInBox(i + 1);
                 break;
             }
         }
         listCurrentTile.Add(null);
-        if (insertIndex != listCurrentTile.Count-1)
+        if (tile.getIndexInBox() != listCurrentTile.Count-1)
         {
-            for (int i = listCurrentTile.Count - 2; i >= insertIndex; i--)
+            for (int i = listCurrentTile.Count - 2; i >= tile.getIndexInBox(); i--)
             {
                 listCurrentTile[i].transform.DOMove(myTransform.TransformPoint(firstTilePos + tilesDistance*(i+1)), 0.5f);
                 listCurrentTile[i + 1] = listCurrentTile[i];
+                listCurrentTile[i + 1].setIndexInBox(i + 1);
             }
         }
-        tile.transform.DOMove(myTransform.TransformPoint(firstTilePos + insertIndex * tilesDistance), 0.7f);
-        listCurrentTile[insertIndex] = tile;
-        return insertIndex;
+        tile.transform.DOMove(myTransform.TransformPoint(firstTilePos + tile.getIndexInBox() * tilesDistance), 0.7f);
+        listCurrentTile[tile.getIndexInBox()] = tile;
     }
-    private bool CheckThreeMatch(int insertIndex, Tile newTile)
+    private bool CheckThreeMatch(Tile newTile)
     {
         //return false; // test dont check three match
-        if (insertIndex >= 2)
+        if (newTile.getIndexInBox() >= 2)
         {
             int newTileSpriteID = newTile.getSpriteID();
-            if (listCurrentTile[insertIndex - 1].getSpriteID() != newTileSpriteID ||
-                listCurrentTile[insertIndex - 2].getSpriteID() != newTileSpriteID)
+            if (listCurrentTile[newTile.getIndexInBox() - 1].getSpriteID() != newTileSpriteID ||
+                listCurrentTile[newTile.getIndexInBox() - 2].getSpriteID() != newTileSpriteID)
             {
                 return false;
             }
@@ -136,17 +136,17 @@ public class CollectBox : MonoBehaviour
             Destroy(listMatchTile[i].gameObject);
             // sau này sẽ nâng cấp thành pooling
         }
-        listMatchTile = new List<Tile>();
     }
-    private void MoveUpTilesModel(int newMatchIndex,Dictionary<Tile, Vector3> dicTileToTarget, List<Tile> listMatchTile)
+    private void MoveUpTilesModel(Tile newTile,Dictionary<Tile, Vector3> dicTileToTarget, List<Tile> listMatchTile)
     {
-        for (int i = newMatchIndex; i >= newMatchIndex - 2; i--)
+        for (int i = newTile.getIndexInBox(); i >= newTile.getIndexInBox() - 2; i--)
         {
             listMatchTile.Add(listCurrentTile[i]);
         }
-        for (int i = newMatchIndex + 1; i < listCurrentTile.Count; i++)
+        for (int i = newTile.getIndexInBox() + 1; i < listCurrentTile.Count; i++)
         {
             listCurrentTile[i - 3] = listCurrentTile[i];
+            listCurrentTile[i - 3].setIndexInBox(i - 3);
             dicTileToTarget.Add(listCurrentTile[i - 3], myTransform.TransformPoint(firstTilePos + tilesDistance * (i - 3)));
         }
         int lastIndex = listCurrentTile.Count-1;

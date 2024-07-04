@@ -8,10 +8,19 @@ public class Tile : MonoBehaviour
     [SerializeField] private int maxTile = 24;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private bool isExposed= false;
+    private int indexInBox = -1;
     private int spriteID = 0;
     public int getSpriteID()
     {
         return spriteID;
+    }
+    public int getIndexInBox()
+    {
+        return indexInBox;
+    }
+    public void setIndexInBox(int index)
+    {
+        indexInBox = index;
     }
     public void setTile(int id = -1)
     {
