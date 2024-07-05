@@ -183,9 +183,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adc4a236554d4994998815490eed3acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTile: 5
+  maxTile: 4
   spriteRenderer: {fileID: 1516349784327104366}
   isExposed: 0
+  indexInBox: -1
+  isMoveToBox: 0
+  control: 
 --- !u!61 &4064073539758688631
 BoxCollider2D:
   m_ObjectHideFlags: 0

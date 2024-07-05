@@ -8,8 +8,14 @@ public class Tile : MonoBehaviour
     [SerializeField] private int maxTile = 24;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private bool isExposed= false;
-    private int indexInBox = -1;
+    [SerializeField] private int indexInBox = -1;
+    public bool isMoveToBox = true;
+    public string control = "";
     private int spriteID = 0;
+    private void Start()
+    {
+        setTile();
+    }
     public int getSpriteID()
     {
         return spriteID;

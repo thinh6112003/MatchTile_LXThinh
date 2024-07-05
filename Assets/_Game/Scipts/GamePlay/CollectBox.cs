@@ -8,101 +8,111 @@ using Unity.VisualScripting;
 using System;
 public class CollectBox : MonoBehaviour
 {
+    [SerializeField] private bool isNotAutoInsert= false;
+    [SerializeField] private bool isHighSpeed= false;
+    [SerializeField] private int idTileInsert= 0;
+    [SerializeField] private int matchTileNumber = 3;
+    [SerializeField] private int maxCollectTile= 8 ;
+    [SerializeField] private float speedSpawn= 1;
+    [SerializeField] private float hideMatchTileTime = 0.15f;
+    [SerializeField] private float moveToTargetTime = 0.6f;
     [SerializeField] private Vector3 firstTilePos= new Vector3(0.65f,0.2f,0f);
     [SerializeField] private Vector3 tilesDistance = new Vector3(1.455f,0f,0f);
     [SerializeField] private Tile tilePrefab;
-    [SerializeField] private int idTileInsert= 0;
-    [SerializeField] private bool isNotAutoInsert= false;
-    [SerializeField] private bool isHighSpeed= false;
-    [SerializeField] private int maxCollectTile= 8 ;
-    private Transform myTransform;
+    [SerializeField] private List<Tile> listCurrentTile = new List<Tile>();
+    private int countTileAfterMatch=0;
     private int dem = 0;
-    private List<Tile> listCurrentTile = new List<Tile>();
     private int demhighspeed = 0 ;
+    private bool endgame = false;
+    private bool fullBox = false;
+    private Transform myTransform;
     private void Start()
     {
+        fullBox = false;
         myTransform = this.transform;
-        Test();
-    }
-    private void Test()
-    {
-        if(dem<= 100)
+
+        Invoke(nameof(Test), 1f);
+        Observer.AddListener(Notifi.END_GAME, () =>
         {
-            Tile newTile =  Instantiate(tilePrefab,myTransform);
-            newTile.transform.localPosition = new Vector3(3,10,0);
-            if (isNotAutoInsert)
-                newTile.setTile(idTileInsert);
-            else
-                newTile.setTile();
-            StartCoroutine(AddTile(newTile));
-            if (isHighSpeed)
-            {
-                demhighspeed++;
-            }
-            if (demhighspeed == 6)
-            {
-                isHighSpeed = false;
-                demhighspeed = 0;
-            }
-            //if (dem < 3)
-            //{
-            //    newTile.setTile(0);
-            //}
-            //else
-            //if (dem < 6)
-            //{
-            //    newTile.setTile(1);
-            //}
-            //else {
-            //    newTile.setTile();
-            //}
-            Invoke(nameof(Test), isHighSpeed? 0.25f :  1f);
-        }
-        dem++;
+            endgame = true;
+            dem = 2000;
+        });
+    }
+    public void Test(Tile newTile)
+    {
+        AddTile(newTile);
     }
     private IEnumerator AddTile(Tile newTile)
     {
-        //if (listCurrentTile.Count == maxCollectTile) yield return null;
-        yield return new WaitForSeconds(0.2f);
-        MoveToInsertTile(newTile);
-        yield return new WaitForSeconds(0.7f);
-        if (CheckThreeMatch(newTile))
+        if (!endgame)
         {
-            Dictionary<Tile, Vector3> dicTileToTarget = new Dictionary<Tile, Vector3>();
-            List<Tile> listMatchTile = new List<Tile>();
-            Debug.Log("is three match");
-            MoveUpTilesModel(newTile, dicTileToTarget, listMatchTile);
-            HideMatchTile(listMatchTile);
-            yield return new WaitForSeconds(0.2f);
-            Debug.Log("MoveUpTilesView,RemoveMatchTile");
-            MoveUpTilesView(dicTileToTarget);
-            RemoveMatchTile(listMatchTile);
+            newTile.isMoveToBox = true;
+            MoveToInsertTile(newTile);
+            if (CheckEndGame_FullBox())
+            {
+                Observer.Noti(Notifi.END_GAME);
+            }
+            while(newTile.isMoveToBox)
+            {
+                yield return null;
+            }
+            if (CheckThreeMatch(newTile))
+            {
+                List<Tile> listMatchTile = new List<Tile>();
+                MoveLeftTiles(newTile, listMatchTile);
+                HideMatchTile(listMatchTile);
+                yield return new WaitForSeconds(0.2f);
+                RemoveMatchTile(listMatchTile);
+            }
         }
-        yield return null;
     }
-    private void MoveToInsertTile(Tile tile)
+    private bool CheckEndGame_FullBox()
     {
-        tile.setIndexInBox(listCurrentTile.Count);
+        int tileCount = listCurrentTile.Count;
+        if (tileCount == maxCollectTile) fullBox = true;
+        for(int i = 2; i < listCurrentTile.Count; i++)
+        {
+            int spriteID_Tile_i= listCurrentTile[i].getSpriteID();
+            if (spriteID_Tile_i == listCurrentTile[i-1].getSpriteID()&& spriteID_Tile_i == listCurrentTile[i - 2].getSpriteID()&&
+                (i+1 == listCurrentTile.Count || spriteID_Tile_i != listCurrentTile[i +1].getSpriteID()))
+            {
+                tileCount -= tileCount;
+            }
+        }
+        if (tileCount < maxCollectTile)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    private void MoveToInsertTile(Tile newTile)
+    {
+        newTile.setIndexInBox(listCurrentTile.Count);
         for (int i = listCurrentTile.Count - 1; i >= 0; i--)
         {
-            if (listCurrentTile[i].getSpriteID() == tile.getSpriteID())
+            if (listCurrentTile[i].getSpriteID() == newTile.getSpriteID())
             {
-                tile.setIndexInBox(i + 1);
+                newTile.setIndexInBox(i + 1);
                 break;
             }
         }
         listCurrentTile.Add(null);
-        if (tile.getIndexInBox() != listCurrentTile.Count-1)
+        if (newTile.getIndexInBox() != listCurrentTile.Count - 1)
         {
-            for (int i = listCurrentTile.Count - 2; i >= tile.getIndexInBox(); i--)
+            for (int i = listCurrentTile.Count - 2; i >= newTile.getIndexInBox(); i--)
             {
-                listCurrentTile[i].transform.DOMove(myTransform.TransformPoint(firstTilePos + tilesDistance*(i+1)), 0.5f);
+                listCurrentTile[i].transform.DOMove(myTransform.TransformPoint(firstTilePos + tilesDistance * (i + 1)), moveToTargetTime)
+                    .OnComplete(() => listCurrentTile[i].isMoveToBox = false);
                 listCurrentTile[i + 1] = listCurrentTile[i];
                 listCurrentTile[i + 1].setIndexInBox(i + 1);
             }
         }
-        tile.transform.DOMove(myTransform.TransformPoint(firstTilePos + tile.getIndexInBox() * tilesDistance), 0.7f);
-        listCurrentTile[tile.getIndexInBox()] = tile;
+        newTile.transform.DOMove(myTransform.TransformPoint(firstTilePos + newTile.getIndexInBox() * tilesDistance), moveToTargetTime)
+            .OnComplete( () => newTile.isMoveToBox = false);
+        listCurrentTile[newTile.getIndexInBox()] = newTile;
     }
     private bool CheckThreeMatch(Tile newTile)
     {
@@ -122,45 +132,40 @@ public class CollectBox : MonoBehaviour
             return false;
         }
     }
-    private void HideMatchTile(List<Tile> listMatchTile)
+    private void MoveLeftTiles(Tile newTile, List<Tile> listMatchTile)
     {
-        for (int i = 0; i <= 2; i++)
-        {
-            listMatchTile[i].gameObject.transform.DOScale(new Vector3(0, 0), 0.2f);
-        }
-    }
-    private void RemoveMatchTile(List<Tile> listMatchTile)
-    {
-        for (int i = 0; i <= 2; i++)
-        {
-            Destroy(listMatchTile[i].gameObject);
-            // sau này sẽ nâng cấp thành pooling
-        }
-    }
-    private void MoveUpTilesModel(Tile newTile,Dictionary<Tile, Vector3> dicTileToTarget, List<Tile> listMatchTile)
-    {
-        for (int i = newTile.getIndexInBox(); i >= newTile.getIndexInBox() - 2; i--)
+        fullBox = false;
+        for (int i = newTile.getIndexInBox(); i > newTile.getIndexInBox() - matchTileNumber; i--)
         {
             listMatchTile.Add(listCurrentTile[i]);
         }
         for (int i = newTile.getIndexInBox() + 1; i < listCurrentTile.Count; i++)
         {
-            listCurrentTile[i - 3] = listCurrentTile[i];
-            listCurrentTile[i - 3].setIndexInBox(i - 3);
-            dicTileToTarget.Add(listCurrentTile[i - 3], myTransform.TransformPoint(firstTilePos + tilesDistance * (i - 3)));
+            listCurrentTile[i].transform
+                .DOMove(myTransform.TransformPoint(firstTilePos + tilesDistance * (i - matchTileNumber)), moveToTargetTime)
+                .OnComplete(() => listCurrentTile[i].isMoveToBox = false);
+            listCurrentTile[i - matchTileNumber] = listCurrentTile[i];
+            listCurrentTile[i - matchTileNumber].setIndexInBox(i - matchTileNumber);
         }
         int lastIndex = listCurrentTile.Count-1;
-        for (int i = lastIndex; i >= lastIndex-2; i--)
+        for (int i = lastIndex; i > lastIndex-matchTileNumber; i--)
         {
             listCurrentTile.RemoveAt(i);
-        }
+        }   
     }
-    private void MoveUpTilesView(Dictionary<Tile, Vector3> dicTileToTarget)
+    private void HideMatchTile(List<Tile> listMatchTile)
     {
-        foreach(KeyValuePair<Tile,Vector3> tileToTarget  in dicTileToTarget)
+        for (int i = 0; i < matchTileNumber; i++)
         {
-            tileToTarget.Key.transform.DOMove(tileToTarget.Value, 0.5f);
+            listMatchTile[i].gameObject.transform.DOScale(new Vector3(0, 0), hideMatchTileTime);
         }
     }
-
+    private void RemoveMatchTile(List<Tile> listMatchTile)
+    {
+        for (int i = 0; i < matchTileNumber; i++)
+        {
+            Destroy(listMatchTile[i].gameObject);
+            // sau này sẽ nâng cấp thành pooling
+        }
+    }
 }

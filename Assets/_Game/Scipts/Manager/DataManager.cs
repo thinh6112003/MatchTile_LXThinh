@@ -11,3 +11,7 @@ public class DataManager : MonoBehaviour
         Instance = this;
     }
 }
+public class Notifi
+{
+    public static string END_GAME = "end game";
+}

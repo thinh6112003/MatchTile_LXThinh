@@ -21,6 +21,14 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         Intance = this;
         LoadMap();
+        Observer.AddListener
+        (
+            Notifi.END_GAME, 
+            () =>
+            {
+                Debug.Log("end game roi !!!!!!!!!!!!!!");
+            }
+        );
     }
     public void LoadMap()
     {
