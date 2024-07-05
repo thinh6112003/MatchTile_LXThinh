@@ -54,7 +54,7 @@ public class LevelDesign : MonoBehaviour
         {
             Debug.Log("pen");
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hitGrid = Physics2D.Raycast(mousePos, Vector2.zero, 0, 1 << 6);
+            RaycastHit2D hitGrid = Physics2D.Raycast(mousePos, Vector2.zero, 0, LayerMask.NameToLayer("Grid Unit"));
             if (hitGrid.collider != null)
             {
                 GridUnit gridUnit = hitGrid.collider.gameObject.GetComponent<GridUnit>();

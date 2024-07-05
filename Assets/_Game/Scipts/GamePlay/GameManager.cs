@@ -4,16 +4,20 @@ using System.IO;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 using static UnityEngine.UI.Image;
 
 public class GameManager : MonoBehaviour
 {
     public List<List<GameObject>> listOflistTileOfLayer = new List<List<GameObject>>();
     public List<bool[,]> map = new List<bool[,]>();
+    [SerializeField] private CollectBox collectBox;
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private GameObject tileContainer;
-    Vector3 origin1 = new Vector3(-11.590f, 13.810f, 0);
-    Vector3 origin2 = new Vector3(-12.20f, 14.420f, 0);
+    private bool isEndGame = false;
+    private Vector3 origin1 = new Vector3(-11.590f, 13.810f, 0);
+    private Vector3 origin2 = new Vector3(-12.20f, 14.420f, 0);
+    private Vector3 tileDistance = new Vector3(1.22f, -1.22f, 0);
     public static GameManager Intance;
     private void Awake()
     {
@@ -26,6 +30,7 @@ public class GameManager : MonoBehaviour
             Notifi.END_GAME, 
             () =>
             {
+                isEndGame = true;
                 Debug.Log("end game roi !!!!!!!!!!!!!!");
             }
         );
@@ -61,7 +66,7 @@ public class GameManager : MonoBehaviour
                             tileContainer.transform
                         );
                         Vector3 origin = l % 2 == 0 ? origin2 : origin1;
-                        newTile.transform.localPosition = origin + new Vector3(i * 1.22f, j * -1.22f, 0);
+                        newTile.transform.localPosition = origin + new Vector3(i * tileDistance.x, j * tileDistance.y, 0);
                         SpriteRenderer newTileSR = newTile.GetComponent<SpriteRenderer>();
                         newTileSR.sortingOrder = currentSortingOrder++;
                         newTileSR.color = new Color(exposureValue, exposureValue, exposureValue, 1f);
@@ -69,6 +74,22 @@ public class GameManager : MonoBehaviour
                 }
             }
             exposureValue += 0.15f;
+        }
+    }
+    public void Update()
+    {
+        if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+        {
+            if (isEndGame) return;
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D tileHit = Physics2D.Raycast(mousePos, Vector2.zero, 0, LayerMask.NameToLayer(""));
+            if (tileHit.collider != null)
+            {
+                Debug.Log("hit");
+                Tile newTileAdd = tileHit.collider.gameObject.GetComponent<Tile>();
+                collectBox.Test(newTileAdd);
+                newTileAdd.setMaxSortingOrder();
+            }
         }
     }
 }

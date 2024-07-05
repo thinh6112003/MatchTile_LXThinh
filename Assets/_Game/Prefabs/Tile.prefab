@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adc4a236554d4994998815490eed3acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTile: 4
+  maxTile: 10
   spriteRenderer: {fileID: 1516349784327104366}
   isExposed: 0
   indexInBox: -1

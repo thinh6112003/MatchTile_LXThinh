@@ -18,6 +18,8 @@ public class CollectBox : MonoBehaviour
     [SerializeField] private float moveToTargetTime = 0.6f;
     [SerializeField] private Vector3 firstTilePos= new Vector3(0.65f,0.2f,0f);
     [SerializeField] private Vector3 tilesDistance = new Vector3(1.455f,0f,0f);
+    [SerializeField] private Vector3 tilesScaleZoom = new Vector3(1.3f,1.3f,1f);
+    [SerializeField] private Vector3 tilesScaleInBox = new Vector3(1.3f,1.3f,1f);
     [SerializeField] private Tile tilePrefab;
     [SerializeField] private List<Tile> listCurrentTile = new List<Tile>();
     private int countTileAfterMatch=0;
@@ -28,42 +30,35 @@ public class CollectBox : MonoBehaviour
     private Transform myTransform;
     private void Start()
     {
-        fullBox = false;
         myTransform = this.transform;
-
-        Invoke(nameof(Test), 1f);
-        Observer.AddListener(Notifi.END_GAME, () =>
-        {
-            endgame = true;
-            dem = 2000;
-        });
+        fullBox = false;
     }
     public void Test(Tile newTile)
     {
-        AddTile(newTile);
+        Debug.Log("insign test");
+        StartCoroutine(AddTile(newTile));
     }
     private IEnumerator AddTile(Tile newTile)
     {
-        if (!endgame)
+        newTile.transform.SetParent(myTransform);
+        Debug.Log("insign addtile");
+        newTile.isMoveToBox = true;
+        MoveToInsertTile(newTile);
+        if (CheckEndGame_FullBox())
         {
-            newTile.isMoveToBox = true;
-            MoveToInsertTile(newTile);
-            if (CheckEndGame_FullBox())
-            {
-                Observer.Noti(Notifi.END_GAME);
-            }
-            while(newTile.isMoveToBox)
-            {
-                yield return null;
-            }
-            if (CheckThreeMatch(newTile))
-            {
-                List<Tile> listMatchTile = new List<Tile>();
-                MoveLeftTiles(newTile, listMatchTile);
-                HideMatchTile(listMatchTile);
-                yield return new WaitForSeconds(0.2f);
-                RemoveMatchTile(listMatchTile);
-            }
+            Observer.Noti(Notifi.END_GAME);
+        }
+        while(newTile.isMoveToBox)
+        {
+            yield return null;
+        }
+        if (CheckThreeMatch(newTile))
+        {
+            List<Tile> listMatchTile = new List<Tile>();
+            MoveLeftTiles(newTile, listMatchTile);
+            HideMatchTile(listMatchTile);
+            yield return new WaitForSeconds(0.2f);
+            RemoveMatchTile(listMatchTile);
         }
     }
     private bool CheckEndGame_FullBox()
@@ -112,6 +107,12 @@ public class CollectBox : MonoBehaviour
         }
         newTile.transform.DOMove(myTransform.TransformPoint(firstTilePos + newTile.getIndexInBox() * tilesDistance), moveToTargetTime)
             .OnComplete( () => newTile.isMoveToBox = false);
+
+        newTile.gameObject.transform.DOScale(tilesScaleZoom, moveToTargetTime / 2f)
+            .OnComplete(() =>
+            {
+                newTile.gameObject.transform.DOScale(tilesScaleInBox, moveToTargetTime / 2f);
+            });
         listCurrentTile[newTile.getIndexInBox()] = newTile;
     }
     private bool CheckThreeMatch(Tile newTile)
