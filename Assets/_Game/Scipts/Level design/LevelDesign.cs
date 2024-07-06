@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-
 public class LevelDesign : MonoBehaviour
 {
+    public static LevelDesign Instance;
+    public List<List<GameObject>> listOflistTileOfLayer = new List<List<GameObject>>();
+    public List<bool[,]> map = new List<bool[,]>();
     [SerializeField] private GameObject gridUnitPrefab;
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private GameObject tileContainer;
@@ -14,17 +15,12 @@ public class LevelDesign : MonoBehaviour
     [SerializeField] private TMP_InputField layerCountInput;
     [SerializeField] private TMP_InputField oddEvenInput;
     [SerializeField] private TextMeshProUGUI layerText;
-    Vector3 origin1 = new Vector3(-11.590f, 13.810f, 0);
-    Vector3 origin2 = new Vector3(-12.20f, 14.420f, 0);
+    [SerializeField] private Vector3 origin1 = new Vector3(-11.590f, 13.810f, 0);
+    [SerializeField] private Vector3 origin2 = new Vector3(-12.20f, 14.420f, 0);
     [SerializeField] int state = 0;
-    int tong = 0;
     private int layer = 0;
     private int countLayer = -1;
-    public static LevelDesign Instance;
-    private bool parity = false;
-    // false = odd, true = even
-    public List<List<GameObject>> listOflistTileOfLayer = new List<List<GameObject>>();
-    public List<bool[,]> map = new List<bool[,]>();
+    private bool parity = false;    // false = odd, true = even
 
     bool isMouseHold = false;
     void Start()
@@ -60,7 +56,6 @@ public class LevelDesign : MonoBehaviour
                 GridUnit gridUnit = hitGrid.collider.gameObject.GetComponent<GridUnit>();
                 if (map[layer][gridUnit.GetX, gridUnit.GetY] == false)
                 {
-                    tong++;
                     map[layer][gridUnit.GetX, gridUnit.GetY] = true;
                     GameObject t = Instantiate
                     (

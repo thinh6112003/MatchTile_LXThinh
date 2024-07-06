@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-
 public class Observer : MonoBehaviour
 {
     public static Dictionary<string,List<Action>> obsever = new Dictionary<string,List<Action>>();

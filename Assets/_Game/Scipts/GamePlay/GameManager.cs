@@ -1,95 +1,49 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using static UnityEngine.UI.Image;
-
 public class GameManager : MonoBehaviour
 {
-    public List<List<GameObject>> listOflistTileOfLayer = new List<List<GameObject>>();
-    public List<bool[,]> map = new List<bool[,]>();
-    [SerializeField] private CollectBox collectBox;
-    [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private GameObject tileContainer;
-    private bool isEndGame = false;
-    private Vector3 origin1 = new Vector3(-11.590f, 13.810f, 0);
-    private Vector3 origin2 = new Vector3(-12.20f, 14.420f, 0);
-    private Vector3 tileDistance = new Vector3(1.22f, -1.22f, 0);
     public static GameManager Intance;
+    [SerializeField] private CollectBox collectBox;
+    [SerializeField] private TilesGrid tileGrid;  
+    private bool isEndGame = false;
     private void Awake()
     {
         //target frame rate ve 60 fps
         Application.targetFrameRate = 60;
         Intance = this;
-        LoadMap();
-        Observer.AddListener
-        (
-            Notifi.END_GAME, 
-            () =>
-            {
-                isEndGame = true;
-                Debug.Log("end game roi !!!!!!!!!!!!!!");
-            }
-        );
+        isEndGame = false;
     }
-    public void LoadMap()
+    private void Start()
     {
-
-        string mapdata = File.ReadAllText(Application.dataPath + "/_Game/MapData/Map");
-        string[] layers = mapdata.Split(";");
-        for (int i = 0; i < layers.Count(); i++)
-        {
-            listOflistTileOfLayer.Add(new List<GameObject>());
-            map.Add(new bool[21, 21]);
-        }
-        int currentSortingOrder = 0;
-        float exposureValue = 1f - 0.15f * (2);
-        for (int l = 0; l < layers.Count(); l++)
-        {
-            string[] rows = layers[l].Split(",");
-            for (int i = 0; i < 21; i++)
-            {
-                string[] cols = rows[i].Split(" ");
-                for (int j = 0; j < 21; j++)
-                {
-                    map[l][i, j] = cols[j] == "1" ? true : false;
-                    if (map[l][i, j] == true)
-                    {
-                        GameObject newTile = Instantiate
-                        (
-                            tilePrefab,
-                            new Vector3(),
-                            Quaternion.identity,
-                            tileContainer.transform
-                        );
-                        Vector3 origin = l % 2 == 0 ? origin2 : origin1;
-                        newTile.transform.localPosition = origin + new Vector3(i * tileDistance.x, j * tileDistance.y, 0);
-                        SpriteRenderer newTileSR = newTile.GetComponent<SpriteRenderer>();
-                        newTileSR.sortingOrder = currentSortingOrder++;
-                        newTileSR.color = new Color(exposureValue, exposureValue, exposureValue, 1f);
-                    }
-                }
-            }
-            exposureValue += 0.15f;
-        }
+        InitGameLevel();
     }
-    public void Update()
+    private void Update()
+    {
+        if(!isEndGame) SelectTileListener();
+    }
+    private void InitGameLevel()
+    {
+        Observer.AddListener (Notifi.END_GAME, HandleEndGame);
+        tileGrid.LoadMap();
+    }
+    public void HandleEndGame()
+    {
+        isEndGame = true;
+        Debug.Log("end game roi !!!!!!!!!!!!!!");
+    }
+    public void SelectTileListener()
     {
         if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
         {
-            if (isEndGame) return;
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D tileHit = Physics2D.Raycast(mousePos, Vector2.zero, 0, LayerMask.NameToLayer(""));
-            if (tileHit.collider != null)
-            {
-                Debug.Log("hit");
-                Tile newTileAdd = tileHit.collider.gameObject.GetComponent<Tile>();
-                collectBox.Test(newTileAdd);
-                newTileAdd.setMaxSortingOrder();
-            }
+            RaycastHit2D tileHit = Physics2D.Raycast(mousePos, Vector2.zero, 0, 1<<7);
+
+            if (tileHit.collider == null) return;
+
+            Tile newTileAdd = tileHit.collider.gameObject.GetComponent<Tile>();
+            tileGrid.RemoveTile(newTileAdd.transform.position);
+            collectBox.AddTile(newTileAdd);
         }
     }
+
 }
