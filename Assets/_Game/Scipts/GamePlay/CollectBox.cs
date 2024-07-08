@@ -24,7 +24,7 @@ public class CollectBox : MonoBehaviour
     private bool endgame = false;
     private bool fullBox = false;
     private Transform myTransform;
-    private void Start()
+    private void Awake()
     {
         myTransform = this.transform;
         fullBox = false;

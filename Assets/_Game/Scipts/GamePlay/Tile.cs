@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private int indexInBox = -1;
     public bool isMoveToBox = true;
     public string control = "";
+    private int GridLayer=0;
     private int spriteID = 0;
     private SpriteRenderer mySpriteRenderer;
     private Transform myTransform;
@@ -20,19 +21,23 @@ public class Tile : MonoBehaviour
     {
         setTile();
     }
-    public int getSpriteID()
+    internal int getGridLayer()
+    {
+        return GridLayer;
+    }
+    internal int getSpriteID()
     {
         return spriteID;
     }
-    public int getIndexInBox()
+    internal int getIndexInBox()
     {
         return indexInBox;
     }
-    public void setIndexInBox(int index)
+    internal void setIndexInBox(int index)
     {
         indexInBox = index;
     }
-    public void setTile(int id = -1)
+    internal void setTile(int id = -1)
     {
         if(id==-1)
             spriteID = Random.Range(0, maxTile);
@@ -42,19 +47,31 @@ public class Tile : MonoBehaviour
         spriteRenderer.sortingOrder = this.GetComponent<SpriteRenderer>().sortingOrder+1;
         spriteRenderer.color = this.GetComponent<SpriteRenderer>().color;
     }
-    public void setTile(Vector3 localPos,Color color,ref int sortingOder, LayerMask layerMark)
+    internal void setTile(Vector3 localPos,Color color,ref int sortingOder, LayerMask layerMark,int layer)
     {
         this.transform.localPosition = localPos;
         mySpriteRenderer.sortingOrder = sortingOder++;
         mySpriteRenderer.color = color;
         this.gameObject.layer = layerMark;
+        this.GridLayer = layer;
     }
-    public void InitMoveToBox(Transform boxTransform)
+    internal void InitMoveToBox(Transform boxTransform)
     {
         this.transform.SetParent(boxTransform);
         this.isMoveToBox = true;
         mySpriteRenderer.sortingOrder = 1000;
         spriteRenderer.sortingOrder = 1001;
+    }
+    internal void DeactiveCollider()
+    {
+        this.gameObject.GetComponent<Collider2D>().enabled = false;
+    }
+    internal void SetExposed()
+    {
+        mySpriteRenderer.color = Color.white;
+        spriteRenderer.color = Color.white;
+        this.gameObject.layer = LayerMask.NameToLayer("Exposed");
+
     }
 }
 

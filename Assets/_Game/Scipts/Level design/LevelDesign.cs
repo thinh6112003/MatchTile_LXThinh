@@ -23,7 +23,7 @@ public class LevelDesign : MonoBehaviour
     private bool parity = false;    // false = odd, true = even
 
     bool isMouseHold = false;
-    void Start()
+    private void Awake()
     {
         Instance = this;
     }
@@ -48,7 +48,6 @@ public class LevelDesign : MonoBehaviour
     {
         if (isMouseHold)
         {
-            Debug.Log("pen");
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hitGrid = Physics2D.Raycast(mousePos, Vector2.zero, 0, LayerMask.NameToLayer("Grid Unit"));
             if (hitGrid.collider != null)
@@ -199,7 +198,6 @@ public class LevelDesign : MonoBehaviour
                 mapdata += ";";
         }
         File.WriteAllText(Application.dataPath + "/_Game/MapData/Map", mapdata);
-        Debug.Log("da saves");
     }
     public void changeState(int newState)
     {

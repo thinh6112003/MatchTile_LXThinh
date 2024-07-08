@@ -3,7 +3,7 @@ public class DataManager : MonoBehaviour
 {
     public static DataManager Instance;
     public SpriteSO spriteSO;
-    private void Start()
+    private void Awake()
     {
         Instance = this;
     }

@@ -14,18 +14,26 @@ public class TilesGrid : MonoBehaviour
     private Transform myTransform;
     private List<bool[,]> map = new List<bool[,]>();
     private List<List<GameObject>> listOflistTileOfLayer = new List<List<GameObject>>();
-    private List<Vector3> posCheckExposed = new List<Vector3>{
+    private List<Vector3> offsetCheckExposed = new List<Vector3>{
         new Vector3(0,0,0),
         new Vector3(0.5f,0.5f,0),
         new Vector3(0.5f,-0.5f,0),
         new Vector3(-0.5f,0.5f,0),
         new Vector3(-0.5f,-0.5f,0),
     };
-    private void Start()
+    private void Awake()
     {
         myTransform = this.gameObject.transform;
     }
-    public void LoadMap()
+    private void Start()
+    {
+        for (int i = 0; i < offsetCheckExposed.Count; i++)
+        {
+            offsetCheckExposed[i] *= myTransform.localScale.x;
+        }
+     
+    }
+    internal void LoadMap()
     {
         string mapdata = File.ReadAllText(Application.dataPath + "/_Game/MapData/Map");
         string[] layers = mapdata.Split(";");
@@ -68,26 +76,50 @@ public class TilesGrid : MonoBehaviour
     }
     private void InstantiateTile(int layer, int row, int col,ref int layerSortingOrder)
     {
-        Tile newTile = Instantiate (tilePrefab, new Vector3(), Quaternion.identity, myTransform );
-
+        Tile newTile = Instantiate (tilePrefab,myTransform);
         Vector3 origin = (layer % 2 == 0) ? origin2 : origin1;
         float tileColorValue = unexposureValue;
         LayerMask layerMark = LayerMask.NameToLayer("Unexposed");
-        if(layer == countLayer - 1)
+        if (layer == countLayer - 1)
         {
             tileColorValue = exposureValue;
             layerMark = LayerMask.NameToLayer("Exposed");
         }
 
         newTile.setTile(
-            localPos: origin + new Vector3(row * tileDistance.x, col * tileDistance.y, 0),
+            localPos: origin + new Vector3(row * tileDistance.x, col * tileDistance.y, -layer),
             color: new Vector4(tileColorValue, tileColorValue, tileColorValue, 1f),
             sortingOder: ref layerSortingOrder,
-            layerMark: layerMark
-        );    
+            layerMark: layerMark,
+            layer: layer
+        );
     }
-    public void RemoveTile(Vector3 tilePos)
+    internal void UpdateGrid(Vector3 tilePos)
     {
-
+        for(int i = 0; i < offsetCheckExposed.Count; i++)
+        {
+            RaycastHit2D tileHit = Physics2D.Raycast(tilePos+ offsetCheckExposed[i], Vector2.zero);
+            if (tileHit.collider == null) continue;
+            Tile tileBehind = tileHit.collider.gameObject.GetComponent<Tile>();
+            if (CheckExposed(tileBehind.transform.position, tileBehind.getGridLayer())) 
+            { 
+                tileHit.collider.gameObject.GetComponent<Tile>().SetExposed();
+            }
+        }
+    }
+    private bool CheckExposed(Vector3 tilePos, int tileGridLayer)
+    {
+        for (int j = 0; j < offsetCheckExposed.Count; j++)
+        {
+            RaycastHit2D tileHitCheck = Physics2D.Raycast(tilePos + offsetCheckExposed[j], Vector2.zero);
+            if (tileHitCheck.collider != null)
+            {
+                if (tileHitCheck.collider.gameObject.GetComponent<Tile>().getGridLayer() > tileGridLayer)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

@@ -26,12 +26,11 @@ public class GameManager : MonoBehaviour
         Observer.AddListener (Notifi.END_GAME, HandleEndGame);
         tileGrid.LoadMap();
     }
-    public void HandleEndGame()
+    private void HandleEndGame()
     {
         isEndGame = true;
-        Debug.Log("end game roi !!!!!!!!!!!!!!");
     }
-    public void SelectTileListener()
+    internal void SelectTileListener()
     {
         if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
         {
@@ -41,7 +40,8 @@ public class GameManager : MonoBehaviour
             if (tileHit.collider == null) return;
 
             Tile newTileAdd = tileHit.collider.gameObject.GetComponent<Tile>();
-            tileGrid.RemoveTile(newTileAdd.transform.position);
+            newTileAdd.DeactiveCollider();
+            tileGrid.UpdateGrid(newTileAdd.transform.position);
             collectBox.AddTile(newTileAdd);
         }
     }
