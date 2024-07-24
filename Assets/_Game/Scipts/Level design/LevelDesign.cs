@@ -48,10 +48,12 @@ public class LevelDesign : MonoBehaviour
     {
         if (isMouseHold)
         {
+            Debug.Log("is mouse hold on pen");
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hitGrid = Physics2D.Raycast(mousePos, Vector2.zero, 0, LayerMask.NameToLayer("Grid Unit"));
+            RaycastHit2D hitGrid = Physics2D.Raycast(mousePos, Vector2.zero, 0, 1<<6);
             if (hitGrid.collider != null)
             {
+                Debug.Log("is hit");
                 GridUnit gridUnit = hitGrid.collider.gameObject.GetComponent<GridUnit>();
                 if (map[layer][gridUnit.GetX, gridUnit.GetY] == false)
                 {
@@ -201,6 +203,7 @@ public class LevelDesign : MonoBehaviour
     }
     public void changeState(int newState)
     {
+        Debug.Log("is change state");
         state = newState;
     }
 }

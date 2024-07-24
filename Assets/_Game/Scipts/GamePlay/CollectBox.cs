@@ -11,12 +11,15 @@ public class CollectBox : MonoBehaviour
     [SerializeField] private int maxCollectTile = 8;
     [SerializeField] private float speedSpawn = 1;
     [SerializeField] private float hideMatchTileTime = 0.15f;
-    [SerializeField] private float moveToTargetTime = 0.6f;
+    [SerializeField] private float moveToTargetTime = 0.4f;
+    [SerializeField] private SpriteRenderer hideEffect;
     [SerializeField] private Vector3 firstTilePos = new Vector3(0.65f, 0.2f, 0f);
     [SerializeField] private Vector3 tilesDistance = new Vector3(1.455f, 0f, 0f);
     [SerializeField] private Vector3 tilesScaleZoom = new Vector3(1.3f, 1.3f, 1f);
     [SerializeField] private Vector3 tilesScaleInBox = new Vector3(1.3f, 1.3f, 1f);
+    [SerializeField] private Vector3 tileEffectOffset = new Vector3(0f, 0.5f, 0f);
     [SerializeField] private Tile tilePrefab;
+    [SerializeField] private GameObject tileEffect;
     [SerializeField] private List<Tile> listCurrentTile = new List<Tile>();
     private int countTileAfterMatch = 0;
     private int dem = 0;
@@ -82,24 +85,28 @@ public class CollectBox : MonoBehaviour
             for (int i = listCurrentTile.Count - 2; i >= newTile.getIndexInBox(); i--)
             {
                 listCurrentTile[i].transform.DOMove(myTransform.TransformPoint(firstTilePos + tilesDistance * (i + 1)), moveToTargetTime)
-                    .OnComplete(() => listCurrentTile[i].isMoveToBox = false);
+                    .OnComplete(() => listCurrentTile[i].isMoveToBox = false).SetAutoKill(true);
                 listCurrentTile[i + 1] = listCurrentTile[i];
                 listCurrentTile[i + 1].setIndexInBox(i + 1);
             }
         }
         newTile.transform.DOMove(myTransform.TransformPoint(firstTilePos + newTile.getIndexInBox() * tilesDistance), moveToTargetTime)
-            .OnComplete(() => newTile.isMoveToBox = false);
+            .OnComplete(() => newTile.isMoveToBox = false)
+            .SetAutoKill(true);
 
         newTile.gameObject.transform.DOScale(tilesScaleZoom, moveToTargetTime / 2f)
+            .SetEase(Ease.OutQuint)
             .OnComplete(() =>
             {
-                newTile.gameObject.transform.DOScale(tilesScaleInBox, moveToTargetTime / 2f);
-            });
+                newTile.gameObject.transform.DOScale(tilesScaleInBox, moveToTargetTime / 2f)
+                    .SetEase(Ease.InQuint).SetAutoKill(true);
+            })
+            .SetAutoKill(true);
         listCurrentTile[newTile.getIndexInBox()] = newTile;
     }
     private bool CheckThreeMatch(Tile newTile)
     {
-        //return false; // test dont check three match
+        //return false; // test don't check three match
         if (newTile.getIndexInBox() >= 2)
         {
             int newTileSpriteID = newTile.getSpriteID();
@@ -140,12 +147,16 @@ public class CollectBox : MonoBehaviour
     {
         for (int i = 0; i < matchTileNumber; i++)
         {
-            listMatchTile[i].gameObject.transform.DOScale(new Vector3(0, 0), hideMatchTileTime)
-                .OnComplete(() =>
-                {
-                    Destroy(listMatchTile[i].gameObject);
-                    // sau này sẽ nâng cấp thành pooling
-                });
+            listMatchTile[i].gameObject.transform.DOScale(new Vector3(0, 0), hideMatchTileTime);
+            GameObject newTileEffect = Instantiate(tileEffect);
+            newTileEffect.transform.position = listMatchTile[i].gameObject.transform.position + tileEffectOffset;
+            Destroy(newTileEffect, 1.5f);
+            Destroy(listMatchTile[i].gameObject, 1.5f);
         }
+    }
+    internal void HideBox()
+    {
+        hideEffect.gameObject.SetActive(true);
+        hideEffect.DOFade(0.6f, 0.3f);
     }
 }

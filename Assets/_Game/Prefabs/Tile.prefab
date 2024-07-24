@@ -187,6 +187,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1516349784327104366}
   isExposed: 0
   indexInBox: -1
+  showSelectTime: 0.15
   isMoveToBox: 0
   control: 
 --- !u!61 &4064073539758688631

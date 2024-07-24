@@ -1,0 +1,27 @@
+
+Effect_tittle.png
+size: 256,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Layer 3
+  rotate: false
+  xy: 2, 2
+  size: 108, 108
+  orig: 108, 108
+  offset: 0, 0
+  index: -1
+light02
+  rotate: false
+  xy: 112, 5
+  size: 110, 105
+  orig: 110, 105
+  offset: 0, 0
+  index: -1
+starparticle
+  rotate: false
+  xy: 224, 88
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1

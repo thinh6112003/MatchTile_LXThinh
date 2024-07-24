@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 public class TilesGrid : MonoBehaviour
 {
+    [SerializeField] private int maxTile = 24;
     [SerializeField] private float unexposureValue = 0.85f;
     [SerializeField] private Tile tilePrefab;
     private int countLayer = 0 ;
@@ -21,6 +22,8 @@ public class TilesGrid : MonoBehaviour
         new Vector3(-0.5f,0.5f,0),
         new Vector3(-0.5f,-0.5f,0),
     };
+    private List<int> listTileID = new List<int>();
+    int countTiles = 0;
     private void Awake()
     {
         myTransform = this.gameObject.transform;
@@ -36,9 +39,37 @@ public class TilesGrid : MonoBehaviour
     internal void LoadMap()
     {
         string mapdata = File.ReadAllText(Application.dataPath + "/_Game/MapData/Map");
+        caculateCountType(mapdata);
+        RandomGridType();
         string[] layers = mapdata.Split(";");
         InitMapData(layers);
         LoadTiles(layers);
+    }
+    private void RandomGridType()
+    {
+        // init idtile list to match 3
+        for(int i=0;i< countTiles / 3; i++)
+        {
+            int newID = Random.Range(0, maxTile);
+            listTileID.Add(newID);
+            listTileID.Add(newID);
+            listTileID.Add(newID);
+        }
+        // mix idtile list
+        for(int i=0;i< countTiles; i++)
+        {
+            int MixIndex = Random.Range(0, countTiles);
+            int term = listTileID[i];
+            listTileID[i] = listTileID[MixIndex];
+            listTileID[MixIndex] = term;
+        }
+    }
+    private void caculateCountType(string stringData)
+    {
+        for(int i=0;i< stringData.Length; i++)
+        {
+            if (stringData[i] == '1') countTiles++;
+        }
     }
     private void InitMapData(string[] layers)
     {
@@ -51,15 +82,16 @@ public class TilesGrid : MonoBehaviour
     }
     private void LoadTiles(string[] layers)
     {
+        int currentIndexTile = 0;
         int layerSortingOrder = 0;
         for (int layer = 0; layer < layers.Count(); layer++)
         {
             string[] rows = layers[layer].Split(",");
-            LoadLayer(layer, rows, ref layerSortingOrder);
+            LoadLayer(layer, rows, ref layerSortingOrder, ref currentIndexTile);
             exposureValue += 0.15f;
         }
     }
-    private void LoadLayer(int layer, string[] rows,ref int layerSortingOrder)
+    private void LoadLayer(int layer, string[] rows,ref int layerSortingOrder, ref int currentIndexTile)
     {
         for (int row = 0; row < 21; row++)
         {
@@ -69,12 +101,13 @@ public class TilesGrid : MonoBehaviour
                 map[layer][row, col] = cols[col] == "1";
                 if (map[layer][row, col] == true)
                 {
-                    InstantiateTile(layer, row, col,ref layerSortingOrder);
+                    InstantiateTile(layer, row, col,ref layerSortingOrder, ref currentIndexTile);
+                    currentIndexTile++;
                 }
             }
         }
     }
-    private void InstantiateTile(int layer, int row, int col,ref int layerSortingOrder)
+    private void InstantiateTile(int layer, int row, int col,ref int layerSortingOrder, ref int currentIndexTile)
     {
         Tile newTile = Instantiate (tilePrefab,myTransform);
         Vector3 origin = (layer % 2 == 0) ? origin2 : origin1;
@@ -91,7 +124,9 @@ public class TilesGrid : MonoBehaviour
             color: new Vector4(tileColorValue, tileColorValue, tileColorValue, 1f),
             sortingOder: ref layerSortingOrder,
             layerMark: layerMark,
-            layer: layer
+            layer: layer,
+            idTile: listTileID[currentIndexTile]
+            
         );
     }
     internal void UpdateGrid(Vector3 tilePos)

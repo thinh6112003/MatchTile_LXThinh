@@ -1,0 +1,111 @@
+
+candy_items.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1
+  rotate: false
+  xy: 157, 360
+  size: 163, 147
+  orig: 163, 147
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 2, 2
+  size: 154, 154
+  orig: 154, 154
+  offset: 0, 0
+  index: -1
+11
+  rotate: true
+  xy: 845, 356
+  size: 151, 153
+  orig: 151, 153
+  offset: 0, 0
+  index: -1
+12
+  rotate: false
+  xy: 239, 61
+  size: 83, 111
+  orig: 83, 111
+  offset: 0, 0
+  index: -1
+22
+  rotate: false
+  xy: 662, 293
+  size: 109, 104
+  orig: 109, 104
+  offset: 0, 0
+  index: -1
+23
+  rotate: false
+  xy: 2, 158
+  size: 144, 169
+  orig: 144, 169
+  offset: 0, 0
+  index: -1
+25
+  rotate: true
+  xy: 492, 377
+  size: 130, 168
+  orig: 130, 168
+  offset: 0, 0
+  index: -1
+3
+  rotate: true
+  xy: 322, 370
+  size: 137, 168
+  orig: 137, 168
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 2, 329
+  size: 153, 178
+  orig: 153, 178
+  offset: 0, 0
+  index: -1
+6
+  rotate: true
+  xy: 662, 399
+  size: 108, 181
+  orig: 108, 181
+  offset: 0, 0
+  index: -1
+8 copy
+  rotate: false
+  xy: 148, 174
+  size: 140, 105
+  orig: 140, 105
+  offset: 0, 0
+  index: -1
+Group 1
+  rotate: false
+  xy: 158, 29
+  size: 79, 143
+  orig: 79, 143
+  offset: 0, 0
+  index: -1
+Group 1 copy
+  rotate: true
+  xy: 157, 281
+  size: 77, 145
+  orig: 77, 145
+  offset: 0, 0
+  index: -1
+Group 2
+  rotate: true
+  xy: 239, 36
+  size: 23, 41
+  orig: 23, 41
+  offset: 0, 0
+  index: -1
+Group 2 copy
+  rotate: true
+  xy: 158, 2
+  size: 25, 43
+  orig: 25, 43
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,27 @@
+
+Firefly.png
+size: 64,64
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1
+  rotate: false
+  xy: 2, 2
+  size: 12, 10
+  orig: 12, 10
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 37, 39
+  size: 10, 8
+  orig: 10, 8
+  offset: 0, 0
+  index: -1
+dot
+  rotate: false
+  xy: 2, 14
+  size: 33, 33
+  orig: 33, 33
+  offset: 0, 0
+  index: -1
