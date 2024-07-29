@@ -1,0 +1,111 @@
+
+lose_screen.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1
+  rotate: true
+  xy: 775, 2
+  size: 39, 86
+  orig: 39, 86
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 489, 46
+  size: 88, 77
+  orig: 88, 77
+  offset: 0, 0
+  index: -1
+11
+  rotate: false
+  xy: 579, 70
+  size: 110, 53
+  orig: 110, 53
+  offset: 0, 0
+  index: -1
+12
+  rotate: false
+  xy: 900, 76
+  size: 82, 50
+  orig: 82, 50
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 900, 167
+  size: 117, 87
+  orig: 117, 87
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 2, 4
+  size: 74, 36
+  orig: 74, 36
+  offset: 0, 0
+  index: -1
+4
+  rotate: true
+  xy: 579, 24
+  size: 44, 85
+  orig: 44, 85
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 691, 41
+  size: 82, 82
+  orig: 82, 82
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 370, 36
+  size: 117, 87
+  orig: 117, 87
+  offset: 0, 0
+  index: -1
+7
+  rotate: true
+  xy: 859, 49
+  size: 74, 36
+  orig: 74, 36
+  offset: 0, 0
+  index: -1
+8
+  rotate: false
+  xy: 900, 128
+  size: 90, 37
+  orig: 90, 37
+  offset: 0, 0
+  index: -1
+9
+  rotate: false
+  xy: 775, 43
+  size: 82, 80
+  orig: 82, 80
+  offset: 0, 0
+  index: -1
+Layer 558
+  rotate: false
+  xy: 2, 42
+  size: 366, 81
+  orig: 366, 81
+  offset: 0, 0
+  index: -1
+ribbon1
+  rotate: false
+  xy: 2, 125
+  size: 447, 129
+  orig: 447, 129
+  offset: 0, 0
+  index: -1
+ribbon2
+  rotate: false
+  xy: 451, 125
+  size: 447, 129
+  orig: 447, 129
+  offset: 0, 0
+  index: -1

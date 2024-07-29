@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 public class GameManager : MonoBehaviour
 {
@@ -17,15 +15,27 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
+        Observer.AddListener("BackToGame", activeGamePlay);
         InitGameLevel();
+        tileGrid.gameObject.SetActive(false);
     }
     private void Update()
     {
-        if(!isEndGame) SelectTileListener();
+        if (!isEndGame) SelectTileListener();
     }
-    private void InitGameLevel()
+    public void activeGamePlay()
     {
-        Observer.AddListener (Notifi.END_GAME, HandleEndGame);
+        tileGrid.gameObject.SetActive(true);
+        collectBox.gameObject.SetActive(true);
+    }
+    public void deActiveGamePlay()
+    {
+        tileGrid.gameObject.SetActive(false);
+        collectBox.gameObject.SetActive(false);
+    }
+    public void InitGameLevel()
+    {
+        Observer.AddListener(Notifi.END_GAME, HandleEndGame);
         tileGrid.LoadMap();
     }
     private void HandleEndGame()
@@ -40,13 +50,13 @@ public class GameManager : MonoBehaviour
     }
     internal void SelectTileListener()
     {
-        if((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))&&tileSelect == null)
+        if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && tileSelect == null)
         {
             tileSelect = getTileSelect();
             if (tileSelect == null) return;
             tileSelect.selectTile();
         }
-        if ((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))&& tileSelect != null)
+        if ((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && tileSelect != null)
         {
             Tile newTileAdd = getTileSelect();
             if (newTileAdd != tileSelect.GetComponent<Tile>())

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 24259507681f11f4a8e5695772f32d3f
+guid: 702407be2e0385248993c394b5c19614
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,13 +117,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sactx-0-1024x1024-Uncompressed-InGameUI-0908f29f_0
+      name: sactx-0-1024x2048-Uncompressed-PopupUI-968318b8_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 379
-        width: 707
-        height: 617
+        x: 562
+        y: 883
+        width: 125
+        height: 95
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,71 +131,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ff65266b74f127b448c2b71af13524e2
-      internalID: 447281343
+      spriteID: 57b88b390c7187542bd007278100cd03
+      internalID: -437635813
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sactx-0-1024x1024-Uncompressed-InGameUI-0908f29f_1
+      name: sactx-0-1024x2048-Uncompressed-PopupUI-968318b8_1
       rect:
         serializedVersion: 2
-        x: 701
-        y: 424
-        width: 117
-        height: 118
+        x: 707
+        y: 1142
+        width: 76
+        height: 91
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0625523a9dba20042b327787cbd33f2a
-      internalID: -1137659177
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: sactx-0-1024x1024-Uncompressed-InGameUI-0908f29f_3
-      rect:
-        serializedVersion: 2
-        x: 3
-        y: 5
-        width: 856
-        height: 167
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3e388424f2972184d9ad0e6cda9c08c6
-      internalID: -1853750084
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: sactx-0-1024x1024-Uncompressed-InGameUI-0908f29f_4
-      rect:
-        serializedVersion: 2
-        x: 700
-        y: 343
-        width: 212
-        height: 73
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f896bcb47410be442a4583d4a82fdb31
-      internalID: 1029808020
+      spriteID: a332f7f9e89183044bbd52a809c0680a
+      internalID: -1353717240
       vertices: []
       indices: 
       edges: []
@@ -203,7 +161,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: a62bf53f721581c4f8fc771a536d967b
+    spriteID: 700cda654a7ac7744985eef5957840b6
     internalID: 0
     vertices: []
     indices: 
@@ -211,11 +169,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      sactx-0-1024x1024-Uncompressed-InGameUI-0908f29f_0: 447281343
-      sactx-0-1024x1024-Uncompressed-InGameUI-0908f29f_1: -1137659177
-      sactx-0-1024x1024-Uncompressed-InGameUI-0908f29f_2: -1078258469
-      sactx-0-1024x1024-Uncompressed-InGameUI-0908f29f_3: -1853750084
-      sactx-0-1024x1024-Uncompressed-InGameUI-0908f29f_4: 1029808020
+      sactx-0-1024x2048-Uncompressed-PopupUI-968318b8_0: -437635813
+      sactx-0-1024x2048-Uncompressed-PopupUI-968318b8_1: -1353717240
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

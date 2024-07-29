@@ -1,0 +1,62 @@
+
+win_screen.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+light02
+  rotate: false
+  xy: 735, 111
+  size: 137, 130
+  orig: 137, 130
+  offset: 0, 0
+  index: -1
+ribbon
+  rotate: false
+  xy: 2, 112
+  size: 447, 129
+  orig: 447, 129
+  offset: 0, 0
+  index: -1
+star1 copy
+  rotate: false
+  xy: 596, 103
+  size: 137, 138
+  orig: 137, 138
+  offset: 0, 0
+  index: -1
+star2
+  rotate: true
+  xy: 874, 133
+  size: 108, 144
+  orig: 108, 144
+  offset: 0, 0
+  index: -1
+star3
+  rotate: true
+  xy: 2, 13
+  size: 40, 143
+  orig: 40, 143
+  offset: 0, 0
+  index: -1
+star4
+  rotate: true
+  xy: 255, 2
+  size: 108, 144
+  orig: 108, 144
+  offset: 0, 0
+  index: -1
+star5
+  rotate: true
+  xy: 451, 99
+  size: 142, 143
+  orig: 142, 143
+  offset: 0, 0
+  index: -1
+text
+  rotate: false
+  xy: 2, 55
+  size: 251, 55
+  orig: 251, 55
+  offset: 0, 0
+  index: -1
