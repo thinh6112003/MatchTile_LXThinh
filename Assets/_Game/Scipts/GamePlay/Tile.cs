@@ -1,16 +1,15 @@
 using DG.Tweening;
 using UnityEngine;
-using static UnityEngine.UI.Image;
 public class Tile : MonoBehaviour
 {
     [SerializeField] private int maxTile = 24;
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private bool isExposed= false; // hien là exposed
+    [SerializeField] private bool isExposed = false; // hien là exposed
     [SerializeField] private int indexInBox = -1;
     [SerializeField] private float showSelectTime = 1.5f;
     public bool isMoveToBox = true;
     public string control = "";
-    private int GridLayer=0;
+    private int GridLayer = 0;
     private int spriteID = 0;
     private SpriteRenderer mySpriteRenderer;
     private Transform myTransform;
@@ -46,10 +45,10 @@ public class Tile : MonoBehaviour
             spriteID = id;
             spriteRenderer.sprite = DataManager.Instance.spriteSO.sprites[spriteID];
         }
-        spriteRenderer.sortingOrder = this.GetComponent<SpriteRenderer>().sortingOrder+1;
+        spriteRenderer.sortingOrder = this.GetComponent<SpriteRenderer>().sortingOrder + 1;
         spriteRenderer.color = this.GetComponent<SpriteRenderer>().color;
     }
-    internal void setTile(Vector3 localPos,Color color,ref int sortingOder, LayerMask layerMark,int layer, int idTile)
+    internal void setTile(Vector3 localPos, Color color, ref int sortingOder, LayerMask layerMark, int layer, int idTile)
     {
         this.transform.localPosition = localPos;
         mySpriteRenderer.sortingOrder = sortingOder++;
