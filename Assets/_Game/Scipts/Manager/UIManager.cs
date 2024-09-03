@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,13 +10,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject defeatPopup;
     [SerializeField] private GameObject pausePopup;
     [SerializeField] private GameObject settingPopup;
-    [SerializeField] private GameObject currentScene;
-    [SerializeField] private GameObject beforeScene;
-    [SerializeField] private GameObject currentPopup;
+    [SerializeField] private GameObject congratsPopup;
     [SerializeField] private GameObject blinds;
-    [SerializeField] private Button button;
+    public static UIManager Instance;
+    private GameObject currentScene;
+    private GameObject beforeScene;
+    private GameObject currentPopup;
     private void Start()
     {
+        Instance = this;
         navigateToScene("Home");
     }
     public void navigateToScene(string nameScene)
@@ -72,7 +73,6 @@ public class UIManager : MonoBehaviour
     }
     public void loadPopup(string namePopup)
     {
-        Debug.Log("isload");
         switch (namePopup)
         {
             case "Victory":
@@ -90,6 +90,10 @@ public class UIManager : MonoBehaviour
             case "Setting":
                 settingPopup.SetActive(true);
                 currentPopup = settingPopup;
+                break;
+            case "Congrats":
+                congratsPopup.SetActive(true);
+                currentPopup = congratsPopup;
                 break;
         }
     }

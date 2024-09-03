@@ -4,12 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 public class CollectBox : MonoBehaviour
 {
-    [SerializeField] private bool isNotAutoInsert = false;
-    [SerializeField] private bool isHighSpeed = false;
-    [SerializeField] private int idTileInsert = 0;
     [SerializeField] private int matchTileNumber = 3;
     [SerializeField] private int maxCollectTile = 8;
-    [SerializeField] private float speedSpawn = 1;
     [SerializeField] private float hideMatchTileTime = 0.15f;
     [SerializeField] private float moveToTargetTime = 0.4f;
     [SerializeField] private SpriteRenderer hideEffect;
@@ -21,18 +17,21 @@ public class CollectBox : MonoBehaviour
     [SerializeField] private Tile tilePrefab;
     [SerializeField] private GameObject tileEffect;
     [SerializeField] private List<Tile> listCurrentTile = new List<Tile>();
-    private int countTileAfterMatch = 0;
-    private int dem = 0;
-    private int demhighspeed = 0;
-    private bool endgame = false;
-    private bool fullBox = false;
     private Transform myTransform;
     private void Awake()
     {
         myTransform = this.transform;
-        fullBox = false;
     }
-    public void AddTile(Tile newTile)
+    internal void Init()
+    {
+        for (int i = 0; i < listCurrentTile.Count; i++)
+        {
+            Destroy(listCurrentTile[i].gameObject);
+        }
+        listCurrentTile = new List<Tile>();
+        hideEffect.DOFade(0, 0);
+    }
+    internal void AddTile(Tile newTile)
     {
         newTile.InitMoveToBox(myTransform);
         StartCoroutine(AddTileCoroutine(newTile));
@@ -40,7 +39,7 @@ public class CollectBox : MonoBehaviour
     private IEnumerator AddTileCoroutine(Tile newTile)
     {
         MoveToInsertTile(newTile);
-        if (CheckEndGame_FullBox()) Observer.Noti(Notifi.END_GAME);
+        if (CheckEndGame_FullBox()) Observer.Noti(Notifi.DEFEAT_GAME);
         while (newTile.isMoveToBox) yield return null;
         if (CheckThreeMatch(newTile))
         {
@@ -52,7 +51,6 @@ public class CollectBox : MonoBehaviour
     private bool CheckEndGame_FullBox()
     {
         int tileCount = listCurrentTile.Count;
-        if (tileCount == maxCollectTile) fullBox = true;
 
         for (int i = 2; i < listCurrentTile.Count; i++)
         {
@@ -124,7 +122,6 @@ public class CollectBox : MonoBehaviour
     }
     private void MoveLeftTiles(Tile newTile, List<Tile> listMatchTile)
     {
-        fullBox = false;
         for (int i = newTile.getIndexInBox(); i > newTile.getIndexInBox() - matchTileNumber; i--)
         {
             listMatchTile.Add(listCurrentTile[i]);
@@ -145,6 +142,7 @@ public class CollectBox : MonoBehaviour
     }
     private void HideMatchTile(List<Tile> listMatchTile)
     {
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.matchTile);
         for (int i = 0; i < matchTileNumber; i++)
         {
             listMatchTile[i].gameObject.transform.DOScale(new Vector3(0, 0), hideMatchTileTime);

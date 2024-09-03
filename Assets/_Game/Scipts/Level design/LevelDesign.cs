@@ -50,7 +50,7 @@ public class LevelDesign : MonoBehaviour
         {
             Debug.Log("is mouse hold on pen");
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hitGrid = Physics2D.Raycast(mousePos, Vector2.zero, 0, 1<<6);
+            RaycastHit2D hitGrid = Physics2D.Raycast(mousePos, Vector2.zero, 0, 1 << 6);
             if (hitGrid.collider != null)
             {
                 Debug.Log("is hit");
@@ -199,6 +199,7 @@ public class LevelDesign : MonoBehaviour
             if (l != countLayer - 1)
                 mapdata += ";";
         }
+        mapdata = (parity ? "even" : "odd") + "|" + mapdata;
         File.WriteAllText(Application.dataPath + "/_Game/MapData/Map", mapdata);
     }
     public void changeState(int newState)
