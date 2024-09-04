@@ -3,15 +3,15 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     [SerializeField] private int maxTile = 24;
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] public SpriteRenderer spriteRenderer;
     [SerializeField] private bool isExposed = false; // hien là exposed
     [SerializeField] private int indexInBox = -1;
     [SerializeField] private float showSelectTime = 1.5f;
     public bool isMoveToBox = true;
     public string control = "";
     private int GridLayer = 0;
-    private int spriteID = 0;
-    private SpriteRenderer mySpriteRenderer;
+    public int spriteID = 0;
+    public SpriteRenderer mySpriteRenderer;
     private Transform myTransform;
     private void Awake()
     {

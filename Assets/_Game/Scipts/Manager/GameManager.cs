@@ -1,19 +1,23 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Intance;
     [SerializeField] private CollectBox collectBox;
     [SerializeField] private TilesGrid tileGrid;
+    [SerializeField] private GameObject background;
     private Tile tileSelect = null;
     private bool isEndGame = false;
     private bool isPlay = false;
     private int currentLevel = 1;
+    private Sprite originBackground;
     private void Awake()
     {
         //target frame rate ve 60 fps
         Application.targetFrameRate = 60;
         Intance = this;
         isEndGame = false;
+        originBackground = background.GetComponent<Image>().sprite;
     }
     private void Start()
     {
@@ -30,31 +34,50 @@ public class GameManager : MonoBehaviour
         isPlay = true;
         tileGrid.gameObject.SetActive(true);
         collectBox.gameObject.SetActive(true);
+        background.GetComponent<Image>().sprite = DataManager.Instance.levelSO.listLevel[currentLevel - 1].background;
     }
     public void DeActiveGamePlay()
     {
         isPlay = false;
         tileGrid.gameObject.SetActive(false);
         collectBox.gameObject.SetActive(false);
+        background.GetComponent<Image>().sprite = originBackground;
     }
     public void InitGameLevel(int iDLevel = -1)
-    {
+    {   // iDlevel = 0 Init level tiếp theo
+        // iDlevel = - 1 Init level hiện tại
+        // iDlevel = -2 Init level mới chơi(khi bấm chơi lại)
+        // iDlevel > 0 Init level duoc chon
+
         if (iDLevel == -1 && DataManager.dynamicData.currentLevel == 11)
         {
+            // TH đã chơi hết các màn 
             UIManager.Instance.navigateToScene("Home");
             UIManager.Instance.loadPopup("Congrats");
             DeActiveGamePlay();
             return;
         }
-        if (iDLevel == 0 && DataManager.dynamicData.currentLevel == 11) DataManager.dynamicData.currentLevel = 10;
-        collectBox.Init();
+
         isPlay = true;
         isEndGame = false;
-        Observer.AddListener(Notifi.DEFEAT_GAME, HandleDefeat);
-        Observer.AddListener(Notifi.VICTORY_GAME, HandleVictory);
+
+        tileGrid.gameObject.SetActive(true);
+        collectBox.gameObject.SetActive(true);
+        collectBox.Init();
+
+        if (iDLevel == 0 && DataManager.dynamicData.currentLevel == 11) DataManager.dynamicData.currentLevel = 10;
         if (iDLevel == -1 || iDLevel == 0) currentLevel = DataManager.dynamicData.currentLevel;
         else if (iDLevel != -2) currentLevel = iDLevel;
+
+        background.GetComponent<Image>().sprite = DataManager.Instance.levelSO.listLevel[currentLevel - 1].background;
+        DataManager.Instance.spriteSO = DataManager.Instance.levelSO.listLevel[currentLevel - 1].tileSet;
+
+        tileGrid.maxTile = DataManager.Instance.levelSO.listLevel[currentLevel - 1].numberTypes;
         tileGrid.LoadMap(currentLevel);
+
+
+        Observer.AddListener(Notifi.DEFEAT_GAME, HandleDefeat);
+        Observer.AddListener(Notifi.VICTORY_GAME, HandleVictory);
     }
     public void PauseGame()
     {
@@ -74,11 +97,10 @@ public class GameManager : MonoBehaviour
     {
         collectBox.HideBox();
     }
-
     private void ShowDefeat()
     {
         UIManager.Instance.loadPopup("Defeat");
-        AudioManager.Instance.PlaySFX(AudioManager.Instance.gameLose);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.gameDefeat);
     }
     private void HandleVictory()
     {
@@ -87,15 +109,15 @@ public class GameManager : MonoBehaviour
     private void ShowVictory()
     {
         UIManager.Instance.loadPopup("Victory");
-        AudioManager.Instance.PlaySFX(AudioManager.Instance.gameWin);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.gameVictory);
     }
     internal void SelectTileListener()
     {
         if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && tileSelect == null)
         {
             tileSelect = getTileSelect();
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.tapTile);
             if (tileSelect == null) return;
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.tapTile);
             tileSelect.selectTile();
         }
         if ((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && tileSelect != null)

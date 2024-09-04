@@ -8,13 +8,13 @@ public class AudioManager : MonoBehaviour
     public AudioSource SoundSource;
 
     [Header("--- Audio Clip -----")]
-    public AudioClip backgroundMusic;    // v
-    public AudioClip buttonClick;        // V
-    public AudioClip gameLose;           // v
-    public AudioClip gameWin;            // v
-    public AudioClip tapTile;            // v
-    public AudioClip matchTile;          // 
-    public AudioClip fly;                // v
+    public AudioClip backgroundMusic;
+    public AudioClip buttonClick;
+    public AudioClip gameDefeat;
+    public AudioClip gameVictory;
+    public AudioClip tapTile;
+    public AudioClip matchTile;
+    public AudioClip fly;
 
     void Start()
     {
@@ -23,7 +23,6 @@ public class AudioManager : MonoBehaviour
         musicSource.clip = backgroundMusic;
         musicSource.Play();
     }
-
     public void PlaySFX(AudioClip clip)
     {
         SoundSource.PlayOneShot(clip);

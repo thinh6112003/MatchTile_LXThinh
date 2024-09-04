@@ -2,7 +2,9 @@ using UnityEngine;
 public class DataManager : MonoBehaviour
 {
     public static DataManager Instance;
+    public LevelSO levelSO;
     public SpriteSO spriteSO;
+    public int coin = 100;
     public static DynamicData dynamicData = new DynamicData();
     private void Awake()
     {

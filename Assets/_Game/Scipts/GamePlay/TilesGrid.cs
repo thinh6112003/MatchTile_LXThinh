@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 public class TilesGrid : MonoBehaviour
 {
-    [SerializeField] private int maxTile = 24;
     [SerializeField] private float unexposureValue = 0.5f;
     [SerializeField] private Tile tilePrefab;
+    public int maxTile = 24;
     private int countLayer = 0;
     private float exposureValue = 1f;
     private Vector3 origin1 = new Vector3(-11.590f, 13.810f, 0);// chuan roi
@@ -48,9 +47,10 @@ public class TilesGrid : MonoBehaviour
     {
         ListRemoveAll();
         InitTileGrid();
-        string mapdataString = File.ReadAllText(Application.dataPath + "/_Game/MapData/Map" + iDmap.ToString());
+        string path = "Map" + iDmap.ToString();
+        string mapdataString = Resources.Load<TextAsset>(path).text;
         caculateCountType(mapdataString);
-        RandomGridType();
+        RandomGridTiles();
         string[] mapdata = mapdataString.Split("|");
         parity = mapdata[0] == "odd" ? false : true;
         string[] layers = mapdata[1].Split(";");
@@ -64,7 +64,7 @@ public class TilesGrid : MonoBehaviour
             Destroy(listTileOfTileGrid[i]);
         }
     }
-    private void RandomGridType()
+    private void RandomGridTiles()
     {
         // init idtile list to match 3
         for (int i = 0; i < countTiles / 3; i++)
@@ -178,5 +178,23 @@ public class TilesGrid : MonoBehaviour
             }
         }
         return true;
+    }
+    public void HoanDoi()
+    {
+        for (int i = 0; i < listTileOfTileGrid.Count; i++)
+        {
+            int MixIndex = Random.Range(0, listTileOfTileGrid.Count);
+            Tile tile1 = listTileOfTileGrid[i].GetComponent<Tile>();
+            Tile tile2 = listTileOfTileGrid[MixIndex].GetComponent<Tile>();
+            int id = tile1.spriteID;               //
+            tile1.spriteID = tile2.spriteID;  //
+            tile2.spriteID = id;      //
+            Sprite sprite = tile1.mySpriteRenderer.sprite;
+            Sprite sprite2 = tile1.spriteRenderer.sprite;
+            tile1.mySpriteRenderer.sprite = tile2.mySpriteRenderer.sprite;
+            tile1.spriteRenderer.sprite = tile2.spriteRenderer.sprite;
+            tile2.spriteRenderer.sprite = sprite2;
+            tile2.mySpriteRenderer.sprite = sprite;
+        }
     }
 }

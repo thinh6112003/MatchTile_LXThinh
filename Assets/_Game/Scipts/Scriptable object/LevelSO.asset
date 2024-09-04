@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ce0efec43977b41b800ebbec0ecb28, type: 3}
+  m_Name: LevelSO
+  m_EditorClassIdentifier: 
+  listLevel:
+  - background: {fileID: 21300000, guid: 1591ab5b0ded22d4f8c8c3e3f3c6e9c9, type: 3}
+    numberTypes: 3
+    tileSet: {fileID: 11400000, guid: a5daa567d26ce9542bb92c1d3afab859, type: 2}
+  - background: {fileID: 21300000, guid: 1591ab5b0ded22d4f8c8c3e3f3c6e9c9, type: 3}
+    numberTypes: 5
+    tileSet: {fileID: 11400000, guid: a5daa567d26ce9542bb92c1d3afab859, type: 2}
+  - background: {fileID: 21300000, guid: 18caa80c6fddafb42b6ba10e8469365e, type: 3}
+    numberTypes: 7
+    tileSet: {fileID: 11400000, guid: cede05689f40fc74d9cdd5fe6fd1e5e9, type: 2}
+  - background: {fileID: 21300000, guid: 18caa80c6fddafb42b6ba10e8469365e, type: 3}
+    numberTypes: 9
+    tileSet: {fileID: 11400000, guid: cede05689f40fc74d9cdd5fe6fd1e5e9, type: 2}
+  - background: {fileID: 21300000, guid: 76dee37dfea9aeb4a9d5c7d9bbd53735, type: 3}
+    numberTypes: 11
+    tileSet: {fileID: 11400000, guid: 0f6989cc8fb14314284224fb468665c5, type: 2}
+  - background: {fileID: 21300000, guid: 76dee37dfea9aeb4a9d5c7d9bbd53735, type: 3}
+    numberTypes: 13
+    tileSet: {fileID: 11400000, guid: 0f6989cc8fb14314284224fb468665c5, type: 2}
+  - background: {fileID: 21300000, guid: 061de292394a01f449ae4492d3a33a04, type: 3}
+    numberTypes: 15
+    tileSet: {fileID: 11400000, guid: 73ac548d1ddf952418e2140cb55213a8, type: 2}
+  - background: {fileID: 21300000, guid: 061de292394a01f449ae4492d3a33a04, type: 3}
+    numberTypes: 17
+    tileSet: {fileID: 11400000, guid: 161bbc95c4ae85440a2e8f9124fc9866, type: 2}
+  - background: {fileID: 21300000, guid: 42fc403767560ca4d95375f3c4199117, type: 3}
+    numberTypes: 19
+    tileSet: {fileID: 11400000, guid: 161bbc95c4ae85440a2e8f9124fc9866, type: 2}
+  - background: {fileID: 21300000, guid: 42fc403767560ca4d95375f3c4199117, type: 3}
+    numberTypes: 21
+    tileSet: {fileID: 11400000, guid: 161bbc95c4ae85440a2e8f9124fc9866, type: 2}
