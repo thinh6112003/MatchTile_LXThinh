@@ -2,7 +2,8 @@
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Intance;
+    public static GameManager Intance;     // singleton
+
     [SerializeField] private CollectBox collectBox;
     [SerializeField] private TilesGrid tileGrid;
     [SerializeField] private GameObject background;
@@ -13,9 +14,9 @@ public class GameManager : MonoBehaviour
     private Sprite originBackground;
     private void Awake()
     {
+        Intance = this;    // singleton 
         //target frame rate ve 60 fps
         Application.targetFrameRate = 60;
-        Intance = this;
         isEndGame = false;
         originBackground = background.GetComponent<Image>().sprite;
     }
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
         tileGrid.gameObject.SetActive(true);
         collectBox.gameObject.SetActive(true);
         background.GetComponent<Image>().sprite = DataManager.Instance.levelSO.listLevel[currentLevel - 1].background;
+        UIManager.Instance.setCoin();
     }
     public void DeActiveGamePlay()
     {
@@ -48,7 +50,7 @@ public class GameManager : MonoBehaviour
         // iDlevel = - 1 Init level hiện tại
         // iDlevel = -2 Init level mới chơi(khi bấm chơi lại)
         // iDlevel > 0 Init level duoc chon
-
+        ClockManager.instance.startClock();
         if (iDLevel == -1 && DataManager.dynamicData.currentLevel == 11)
         {
             // TH đã chơi hết các màn 
@@ -57,7 +59,6 @@ public class GameManager : MonoBehaviour
             DeActiveGamePlay();
             return;
         }
-
         isPlay = true;
         isEndGame = false;
 
@@ -75,9 +76,13 @@ public class GameManager : MonoBehaviour
         tileGrid.maxTile = DataManager.Instance.levelSO.listLevel[currentLevel - 1].numberTypes;
         tileGrid.LoadMap(currentLevel);
 
+        UIManager.Instance.setLevelText(currentLevel);
+
 
         Observer.AddListener(Notifi.DEFEAT_GAME, HandleDefeat);
+        Observer.AddListener(Notifi.DEFEAT_GAME, ClockManager.instance.stopClock);
         Observer.AddListener(Notifi.VICTORY_GAME, HandleVictory);
+        Observer.AddListener(Notifi.VICTORY_GAME, ClockManager.instance.stopClock);
     }
     public void PauseGame()
     {
@@ -109,6 +114,9 @@ public class GameManager : MonoBehaviour
     private void ShowVictory()
     {
         UIManager.Instance.loadPopup("Victory");
+        UIManager.Instance.setVictory(10, ClockManager.time);
+        DataManager.Instance.coin += 10;
+        UIManager.Instance.setCoin();
         AudioManager.Instance.PlaySFX(AudioManager.Instance.gameVictory);
     }
     internal void SelectTileListener()

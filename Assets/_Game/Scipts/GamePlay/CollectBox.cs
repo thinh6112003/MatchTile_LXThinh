@@ -48,7 +48,7 @@ public class CollectBox : MonoBehaviour
             HideMatchTile(listMatchTile);
         }
     }
-    private bool CheckEndGame_FullBox()
+    private bool CheckEndGame_FullBox()   // check lose game
     {
         int tileCount = listCurrentTile.Count;
 

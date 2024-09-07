@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -12,6 +13,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject settingPopup;
     [SerializeField] private GameObject congratsPopup;
     [SerializeField] private GameObject blinds;
+    [SerializeField] private GameObject noti;
+    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI coinText;
+    [SerializeField] private TextMeshProUGUI coinInGameText;
+    [SerializeField] private TextMeshProUGUI LevelText;
     public static UIManager Instance;
     private GameObject currentScene;
     private GameObject beforeScene;
@@ -101,5 +107,29 @@ public class UIManager : MonoBehaviour
     {
         currentPopup.SetActive(false);
         currentPopup = null;
+    }
+    public void setVictory(int coin, int time)
+    {
+        coinText.text = coin.ToString();
+        int phut = time / 60;
+        int giay = time - phut * 60;
+        timeText.text = phut.ToString() + ":" + giay.ToString();
+    }
+    public void setCoin()
+    {
+        coinInGameText.text = DataManager.Instance.coin.ToString();
+    }
+    public void showNoti()
+    {
+        noti.SetActive(true);
+        Invoke(nameof(hideNoti), 1.5f);
+    }
+    public void hideNoti()
+    {
+        noti.SetActive(false);
+    }
+    public void setLevelText(int level)
+    {
+        LevelText.text = "Level " + level.ToString();
     }
 }

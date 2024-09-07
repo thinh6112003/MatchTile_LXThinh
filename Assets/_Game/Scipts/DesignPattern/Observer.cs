@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Observer : MonoBehaviour
 {
-    public static Dictionary<string,List<Action>> obsever = new Dictionary<string,List<Action>>();
+    public static Dictionary<string, List<Action>> obsever = new Dictionary<string, List<Action>>();
     public static void AddListener(String notiName, Action action)
     {
-        if( !obsever.ContainsKey(notiName))
+        if (!obsever.ContainsKey(notiName))
         {
-            obsever.Add(notiName,new List<Action>());
+            obsever.Add(notiName, new List<Action>());
         }
         obsever[notiName].Add(action);
     }
@@ -26,13 +26,13 @@ public class Observer : MonoBehaviour
         {
             return;
         }
-        foreach (Action action in obsever[notiName]) 
+        foreach (Action action in obsever[notiName])
         {
             try
             {
                 action.Invoke();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.Log("error invoke action :" + e);
             }

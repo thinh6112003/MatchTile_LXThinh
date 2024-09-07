@@ -13,7 +13,7 @@ public class TilesGrid : MonoBehaviour
     private Vector3 tileDistance = new Vector3(1.22f, -1.22f, 0);
     private Transform myTransform;
     private List<bool[,]> map = new List<bool[,]>();
-    private List<GameObject> listTileOfTileGrid = new List<GameObject>();
+    private List<GameObject> listTileOfTileGrid = new List<GameObject>();   // //////
     private List<Vector3> offsetCheckExposed = new List<Vector3>{
         new Vector3(0,0,0),
         new Vector3(0.5f,0.5f,0),
@@ -152,7 +152,7 @@ public class TilesGrid : MonoBehaviour
     {
         Vector3 tilePos = selectedTile.transform.position;
         listTileOfTileGrid.Remove(selectedTile);
-        if (listTileOfTileGrid.Count == 0) Observer.Noti("Victory");
+        if (listTileOfTileGrid.Count == 0) Observer.Noti("Victory");      //check win game
         for (int i = 0; i < offsetCheckExposed.Count; i++)
         {
             RaycastHit2D tileHit = Physics2D.Raycast(tilePos + offsetCheckExposed[i], Vector2.zero);
@@ -181,6 +181,13 @@ public class TilesGrid : MonoBehaviour
     }
     public void HoanDoi()
     {
+        if (DataManager.Instance.coin < 3)
+        {
+            UIManager.Instance.showNoti();
+            return;
+        }
+        DataManager.Instance.coin -= 3;
+        UIManager.Instance.setCoin();
         for (int i = 0; i < listTileOfTileGrid.Count; i++)
         {
             int MixIndex = Random.Range(0, listTileOfTileGrid.Count);
