@@ -25,6 +25,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         Instance = this;
+        
         navigateToScene("Home");
     }
     public void navigateToScene(string nameScene)
