@@ -19,7 +19,6 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         Instance = this;
-        Debug.Log("play sound");
         musicSource.clip = backgroundMusic;
         musicSource.Play();
     }

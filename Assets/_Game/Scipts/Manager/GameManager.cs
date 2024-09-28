@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
         Observer.AddListener("BackToGame", ActiveGamePlay);
         Observer.AddListener(Notifi.PAUSE_GAME, PauseGame);
         tileGrid.gameObject.SetActive(false);
+        Observer.AddListener(Notifi.DEFEAT_GAME, HandleDefeat);
+        Observer.AddListener(Notifi.DEFEAT_GAME, ClockManager.instance.stopClock);
+        Observer.AddListener(Notifi.VICTORY_GAME, HandleVictory);
+        Observer.AddListener(Notifi.VICTORY_GAME, ClockManager.instance.stopClock);
     }
     private void Update()
     {
@@ -77,12 +81,6 @@ public class GameManager : MonoBehaviour
         tileGrid.LoadMap(currentLevel);
 
         UIManager.Instance.setLevelText(currentLevel);
-
-
-        Observer.AddListener(Notifi.DEFEAT_GAME, HandleDefeat);
-        Observer.AddListener(Notifi.DEFEAT_GAME, ClockManager.instance.stopClock);
-        Observer.AddListener(Notifi.VICTORY_GAME, HandleVictory);
-        Observer.AddListener(Notifi.VICTORY_GAME, ClockManager.instance.stopClock);
     }
     public void PauseGame()
     {
@@ -109,6 +107,7 @@ public class GameManager : MonoBehaviour
     }
     private void HandleVictory()
     {
+        Debug.Log("victory");
         Invoke("ShowVictory", 1.5f);
     }
     private void ShowVictory()
@@ -116,6 +115,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.loadPopup("Victory");
         UIManager.Instance.setVictory(10, ClockManager.time);
         DataManager.Instance.coin += 10;
+        Debug.Log("tang coin");
         UIManager.Instance.setCoin();
         AudioManager.Instance.PlaySFX(AudioManager.Instance.gameVictory);
     }
